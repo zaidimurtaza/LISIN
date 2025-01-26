@@ -10,9 +10,7 @@ interface ProfileSongsProps {
   onDelete: (id: number) => void;
 }
 
-const ProfileSongs: React.FC<ProfileSongsProps> = ({ songs = [], isOwnProfile, onDelete }) => {
-  // Log the songs array for debugging
-  console.log('ProfileSongs received songs:', songs);
+const ProfileSongs: React.FC<ProfileSongsProps> = ({ songs = [], isOwnProfile, onDelete }) => {  
 
   return (
     <div className="space-y-6">
