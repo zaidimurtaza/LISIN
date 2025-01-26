@@ -96,7 +96,8 @@ const CommentList: React.FC<CommentListProps> = ({
   return (
     <div className="space-y-4 w-full max-w-4xl mx-auto">
       {comments.map((comment) => {
-        const isOwnComment = user.username === comment.commenter.name;
+        const isOwnComment = user && user.username === comment.commenter.name;
+
         const isEditing = editingCommentId === comment.id;
 
         return (
