@@ -37,8 +37,8 @@ const SongForm: React.FC<SongFormProps> = ({
     if (formData.title.length === 0) {
       setErrors((prev) => ({ ...prev, title: 'Title is required.' }));
       return;
-    } else if (formData.title.length > 50) {
-      setErrors((prev) => ({ ...prev, title: 'Title must be 50 characters or fewer.' }));
+    } else if (formData.title.length > 40) {
+      setErrors((prev) => ({ ...prev, title: 'Title must be 40 characters or fewer.' }));
       return;
     }
 
@@ -90,11 +90,11 @@ const SongForm: React.FC<SongFormProps> = ({
           type="text"
           value={formData.title}
           onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-          maxLength={50} // Restrict input length
+          maxLength={40} // Restrict input length
           className="mt-1 block w-full rounded-md border-gray-700 bg-gray-900 text-white placeholder-gray-500 focus:border-indigo-500 focus:ring-indigo-500"
         />
         {errors.title && <p className="mt-1 text-sm text-red-400">{errors.title}</p>}
-        <p className="mt-1 text-sm text-gray-500">{formData.title.length} / 50</p> {/* Character count for title */}
+        <p className="mt-1 text-sm text-gray-500">{formData.title.length} / 40</p> {/* Character count for title */}
       </div>
 
       <div>
