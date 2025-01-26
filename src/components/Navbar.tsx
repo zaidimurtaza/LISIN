@@ -36,7 +36,11 @@ const Navbar = () => {
     navigate('/login');
   };
 
-  const loadNotifications = async () => {
+ 
+
+  useEffect(() => {
+
+    const loadNotifications = async () => {
 
       try {
         const data = await fetchNotifications();
@@ -48,18 +52,16 @@ const Navbar = () => {
     
   };
 
-  useEffect(() => {
     loadNotifications();
 
     const intervalId = setInterval(() => {
-      if (!isAuthenticated) {
-        console.log('User not authenticated');
-        return;
-      } else {loadNotifications();}
-    }, 10000);
+      if (isAuthenticated) {
+        loadNotifications();
+      } 
+    }, 12000);
 
     return () => clearInterval(intervalId);
-  }, []);
+  }, [isAuthenticated]);
   
   // Added aria-label for better accessibility
   return (
