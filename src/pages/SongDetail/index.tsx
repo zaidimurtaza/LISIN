@@ -87,6 +87,17 @@ const SongDetail = () => {
     }
   };
 
+  const handleViewIncrement = async () => {
+    
+    try {
+      await songAPI.increaseViewCount(Number(id));
+      await fetchSong();
+    } catch (error) {
+      toast.error('Failed to like song');
+    }
+  };
+
+
     const handleUnLike = async () => {
       try {
         await songAPI.unLikeSong(Number(id));
@@ -100,11 +111,9 @@ const SongDetail = () => {
       if (!song) return;
       
       try {
-        console.log('save click', song.is_saved_song);
         await songAPI.saveSong(song.id);
         toast.success('Song saved successfully');
         await fetchSong();
-        console.log('save click', song.is_saved_song);
       } catch (error) {
         toast.error('Failed to save song');
       }
@@ -212,6 +221,7 @@ const SongDetail = () => {
         <SongInfo 
           song={song} 
           onLike={handleLike}
+          onViewIncrement={handleViewIncrement}                       
           onUnLike={handleUnLike}
           onSave={handleSave}
           onUnsave={handleUnsave}

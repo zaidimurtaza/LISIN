@@ -22,6 +22,7 @@ interface SongInfoProps {
   onSave: () => void;
   onSubscribe: () => void;
   isSubscribed: boolean;
+  onViewIncrement: () => void;
 }
 
 const SongInfo: React.FC<SongInfoProps> = ({ 
@@ -32,6 +33,7 @@ const SongInfo: React.FC<SongInfoProps> = ({
   onSave,
   onSubscribe,
   isSubscribed,
+  onViewIncrement,
 }) => {
   const [isLiked, setIsLiked] = useState((song.likes?.length ?? 0) > 0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -114,6 +116,17 @@ const SongInfo: React.FC<SongInfoProps> = ({
       setIsPlaying(true);
     }
   }, []);
+
+  const handleViewIncrement = () => {
+    setTimeout(() => {
+      onViewIncrement(); // Increment view after 30 seconds
+    }, 14000);
+  };
+  
+  useEffect(() => {
+    if (isPlaying) handleViewIncrement();
+  }, [isPlaying]);
+  
 
   return (
     <div className="bg-gray-900 text-white w-full max-w-4xl mx-auto rounded-lg overflow-hidden shadow-lg">
@@ -234,27 +247,9 @@ const SongInfo: React.FC<SongInfoProps> = ({
             </button>
           )}
         </div>
-        
-        {/* <div className="mt-4 text-gray-300">
-          <p 
-            className={`text-sm md:text-base ${
-              showFullDescription ? '' : 'line-clamp-3'
-            }`}
-          >
-            {song.content}
-          </p>
-          {song.content.length > 100 && (
-            <button 
-              onClick={toggleDescription} 
-              className="text-green-500 text-sm mt-2"
-            >
-              {showFullDescription ? 'Show Less' : 'View More'}
-            </button>
-          )}
-        </div> */}
 
 
-        {/* Footer */}
+      {/* Footer */}
         <div className="mt-4 flex justify-between items-center text-sm md:text-base">
           <div className="flex items-center space-x-4 text-gray-300">
             <button 

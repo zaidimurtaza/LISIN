@@ -39,6 +39,7 @@ export const songAPI = {
   unsaveSong: (songId: number) => api.delete('/saved-songs/', { data: { song_id: songId } }),
   isSubscribed: (username: string) => api.get(`/userprofile/${username}/subscription-status/`),
   searchSongs: (query: string) => api.post(`/song-search/`,{ q: query }),
+  increaseViewCount: (id: number) => api.post(`/songs/${id}/increment-view/`),
 };
 
 export const profileAPI = {
