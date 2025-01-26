@@ -37,10 +37,7 @@ const Navbar = () => {
   };
 
   const loadNotifications = async () => {
-    if (!isAuthenticated) {
-      console.log('User not authenticated');
-      return;
-    } else {
+
       try {
         const data = await fetchNotifications();
         setNotifications(data);
@@ -48,23 +45,22 @@ const Navbar = () => {
       } catch (error) {
         console.error('Error fetching notifications:', error);
       }
-    }
+    
   };
 
   useEffect(() => {
     loadNotifications();
 
     const intervalId = setInterval(() => {
-      loadNotifications();
-    }, 30000);
+      if (!isAuthenticated) {
+        console.log('User not authenticated');
+        return;
+      } else {loadNotifications();}
+    }, 10000);
 
     return () => clearInterval(intervalId);
   }, []);
-
-  useEffect(() => {
-    console.log('Unread notifications:', unreadNotifications);
-  }, [unreadNotifications]);
-
+  
   // Added aria-label for better accessibility
   return (
     <nav className="bg-black shadow-md text-white -mb-5">
