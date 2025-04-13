@@ -23,6 +23,7 @@ interface SongInfoProps {
   onSubscribe: () => void;
   isSubscribed: boolean;
   onViewIncrement: () => void;
+  onSongEnd: () => void;
 }
 
 const SongInfo: React.FC<SongInfoProps> = ({ 
@@ -34,6 +35,7 @@ const SongInfo: React.FC<SongInfoProps> = ({
   onSubscribe,
   isSubscribed,
   onViewIncrement,
+  onSongEnd
 }) => {
   const [isLiked, setIsLiked] = useState((song.likes?.length ?? 0) > 0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -172,7 +174,7 @@ const SongInfo: React.FC<SongInfoProps> = ({
           </div>
 
           {/* Action Buttons */}
-          <div className="flex space-x-2 md:space-x-4">
+          <div className="flex space-x-28 md:space-x-4">
             <SaveButton 
               isSaved={song.is_saved_song === true}  
               onSave={() => song.is_saved_song ? onUnsave() : onSave()}
@@ -180,6 +182,13 @@ const SongInfo: React.FC<SongInfoProps> = ({
             >
               {song.is_saved_song ? 'Saved' : 'Save'}
             </SaveButton>
+            <button 
+  onClick={() => onSongEnd()}
+  className="ml-auto text-xs md:text-sm bg-indigo-800 hover:bg-indigo-700 text-white px-2 py-1 md:px-2 md:py-1 rounded shadow-md border border-indigo-900 transition-colors duration-200"
+>
+  Change Song
+</button>
+
           </div>
         </div>
 
@@ -190,6 +199,8 @@ const SongInfo: React.FC<SongInfoProps> = ({
               ref={audioRef}
               src={song.audio} 
               onTimeUpdate={handleTimeUpdate}
+  autoPlay
+  onEnded={onSongEnd}
             />
             
             <div className="flex items-center space-x-2 md:space-x-4">

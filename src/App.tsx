@@ -7,7 +7,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Profile from './pages/Profile';
-import SongDetail from './pages/SongDetail';
+import MainSongView from './pages/SongDetail/MainIndexSongDetails';
 import CreateSong from './pages/CreateSong';
 import EditSong from './pages/EditSong';
 import Search from './pages/Search';
@@ -27,7 +27,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
-              <Route path="/song/:id" element={<SongDetail />} />
+              <Route path="/song/:id" element={<MainSongView />} />
               <Route path="/search/" element={<Search />} />
               <Route
                 path="/create-song"

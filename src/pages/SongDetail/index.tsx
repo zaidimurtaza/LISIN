@@ -8,7 +8,7 @@ import SongInfo from './SongInfo';
 import CommentList from './CommentList';
 import CommentForm from './CommentForm';
 
-const SongDetail = () => {
+const SongDetail = ({onSongEnd}) => {
   const { id } = useParams();
   const { user } = useAuth();
   const [song, setSong] = useState<Song | null>(null);
@@ -228,6 +228,7 @@ const SongDetail = () => {
           onSubscribe={handleSubscribe}
           isSubscribed={isSubscribed}
           isSaved={isSaved}
+          onSongEnd={onSongEnd}
         />
         <div className="bg-gray-900 max-w-4xl mx-auto rounded-lg  p-1">
           <h2 className="text-xl font-semibold mb-4">{`Comments ${song.comments?.length || 0}`}</h2>
