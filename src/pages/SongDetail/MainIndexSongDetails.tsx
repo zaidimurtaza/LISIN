@@ -41,7 +41,7 @@ const MainSongView = () => {
   }
 
   return (
-    <div className="p-4 z-50 relative">
+    <div className="p-0 z-50 relative">
       
       <AnimatePresence mode="wait">
         <motion.div
