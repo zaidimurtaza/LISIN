@@ -60,7 +60,7 @@ const MainSongView = () => {
             opacity: 0, 
             x: -100, 
             transition: { 
-              duration: 0.3, 
+              duration: 0.6, 
               ease: "anticipate" 
             }
           }}
