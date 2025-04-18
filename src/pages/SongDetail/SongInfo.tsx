@@ -1,13 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { 
-  Heart, 
-  Eye, 
-  User, 
-  Play, 
-  Pause, 
-  Volume2, 
-  VolumeX 
+import {
+  Heart,
+  Eye,
+  User,
+  Play,
+  Pause,
+  Volume2,
+  VolumeX
 } from 'lucide-react';
 import { Song } from '../../types';
 import { formatDistanceToNow } from 'date-fns';
@@ -26,10 +26,10 @@ interface SongInfoProps {
   onSongEnd: () => void;
 }
 
-const SongInfo: React.FC<SongInfoProps> = ({ 
-  song, 
+const SongInfo: React.FC<SongInfoProps> = ({
+  song,
   onUnsave,
-  onLike, 
+  onLike,
   onUnLike,
   onSave,
   onSubscribe,
@@ -58,7 +58,7 @@ const SongInfo: React.FC<SongInfoProps> = ({
 
   const handleTimeUpdate = () => {
     if (audioRef.current) {
-      const progressPercent = 
+      const progressPercent =
         (audioRef.current.currentTime / audioRef.current.duration) * 100;
       setProgress(progressPercent);
     }
@@ -66,7 +66,7 @@ const SongInfo: React.FC<SongInfoProps> = ({
 
   const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (audioRef.current) {
-      const seekTime = 
+      const seekTime =
         (Number(e.target.value) / 100) * audioRef.current.duration;
       audioRef.current.currentTime = seekTime;
       setProgress(Number(e.target.value));
@@ -102,15 +102,15 @@ const SongInfo: React.FC<SongInfoProps> = ({
     setShowFullDescription(!showFullDescription);
   };
 
-    // Function to detect and convert links/emails in the description
-    const convertLinks = (text: string) => {
-      const urlRegex = /(https?:\/\/[^\s]+)/g;
-      const emailRegex = /([a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6})/g;
-  
-      return text
-        .replace(urlRegex, (url) => `<a href="${url}" target="_blank" class="text-blue-400">${url}</a>`)
-        .replace(emailRegex, (email) => `<a href="mailto:${email}" class="text-blue-400">${email}</a>`);
-    };
+  // Function to detect and convert links/emails in the description
+  const convertLinks = (text: string) => {
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    const emailRegex = /([a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6})/g;
+
+    return text
+      .replace(urlRegex, (url) => `<a href="${url}" target="_blank" class="text-blue-400">${url}</a>`)
+      .replace(emailRegex, (email) => `<a href="mailto:${email}" class="text-blue-400">${email}</a>`);
+  };
 
   useEffect(() => {
     if (audioRef.current) {
@@ -124,19 +124,19 @@ const SongInfo: React.FC<SongInfoProps> = ({
       onViewIncrement(); // Increment view after 30 seconds
     }, 14000);
   };
-  
+
   useEffect(() => {
     if (isPlaying) handleViewIncrement();
   }, [isPlaying]);
-  
+
 
   return (
     <div className="bg-gray-900 text-white w-full max-w-4xl mx-auto rounded-lg overflow-hidden shadow-lg">
       {/* Image Section */}
       <div className="relative w-full h-48 md:h-64 lg:h-80">
-        <img 
-          src={song.image} 
-          alt={song.title} 
+        <img
+          src={song.image}
+          alt={song.title}
           className="absolute inset-0 w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent" />
@@ -164,7 +164,7 @@ const SongInfo: React.FC<SongInfoProps> = ({
               <h1 className="text-xl md:text-2xl lg:text-3xl font-bold truncate max-w-[200px] md:max-w-[300px]">
                 {song.title}
               </h1>
-              <Link 
+              <Link
                 to={`/profile/${song.author.name}`}
                 className="text-green-400 text-sm md:text-base hover:text-green-300"
               >
@@ -174,44 +174,47 @@ const SongInfo: React.FC<SongInfoProps> = ({
           </div>
 
           {/* Action Buttons */}
-          <div className="flex space-x-28 md:space-x-4">
-            <SaveButton 
-              isSaved={song.is_saved_song === true}  
-              onSave={() => song.is_saved_song ? onUnsave() : onSave()}
-              className={`text-sm md:text-base ${song.is_saved_song ? 'bg-green-500' : 'bg-gray-700'} px-2 py-1 md:px-4 md:py-2 rounded-full`}
-            >
-              {song.is_saved_song ? 'Saved' : 'Save'}
-            </SaveButton>
-            <button 
-  onClick={() => onSongEnd()}
-  className="ml-auto text-xs md:text-sm bg-indigo-800 hover:bg-indigo-700 text-white px-2 py-1 md:px-2 md:py-1 rounded shadow-md border border-indigo-900 transition-colors duration-200"
->
-  Change Song
-</button>
+          <div className="flex w-full items-center justify-between md:justify-end space-x-4">
+  <SaveButton 
+    isSaved={song.is_saved_song === true}  
+    onSave={() => song.is_saved_song ? onUnsave() : onSave()}
+    className={`text-sm md:text-base ${song.is_saved_song ? 'bg-green-500' : 'bg-gray-700'} px-2 py-1 md:px-4 md:py-2 rounded-full`}
+  >
+    {song.is_saved_song ? 'Saved' : 'Save'}
+  </SaveButton>
 
-          </div>
+  <button 
+    onClick={() => onSongEnd()}
+    className="text-xs md:text-sm bg-indigo-800 hover:bg-indigo-700 text-white px-2 py-1 md:px-2 md:py-1 rounded shadow-md border border-indigo-900 transition-colors duration-200"
+  >
+    Change Song
+  </button>
+</div>
+
+
+
         </div>
 
         {/* Audio Player */}
         {song.audio && (
           <div className="bg-gray-800 rounded-lg p-3 md:p-4">
-            <audio 
+            <audio
               ref={audioRef}
-              src={song.audio} 
+              src={song.audio}
               onTimeUpdate={handleTimeUpdate}
-  autoPlay
-  onEnded={onSongEnd}
+              autoPlay
+              onEnded={onSongEnd}
             />
-            
+
             <div className="flex items-center space-x-2 md:space-x-4">
-              <button 
-                onClick={togglePlay} 
+              <button
+                onClick={togglePlay}
                 className="bg-green-500 text-black p-2 md:p-3 rounded-full hover:bg-green-400"
               >
                 {isPlaying ? <Pause size={16} md:size={24} /> : <Play size={16} md:size={24} />}
               </button>
-              
-              <input 
+
+              <input
                 type="range"
                 min="0"
                 max="100"
@@ -219,12 +222,12 @@ const SongInfo: React.FC<SongInfoProps> = ({
                 onChange={handleSeek}
                 className="w-full h-1 md:h-2 bg-gray-600 rounded-full appearance-none"
               />
-              
+
               <div className="flex items-center space-x-1 md:space-x-2">
                 <button onClick={toggleMute} className="text-gray-300 hover:text-white">
                   {isMuted ? <VolumeX size={16} md:size={24} /> : <Volume2 size={16} md:size={24} />}
                 </button>
-                <input 
+                <input
                   type="range"
                   min="0"
                   max="1"
@@ -239,19 +242,18 @@ const SongInfo: React.FC<SongInfoProps> = ({
         )}
 
         {/* Song Description */}
-{/* Song Description */}
-<div className="mt-4 text-gray-300">
-          <p 
-            className={`text-sm md:text-base ${
-              showFullDescription ? '' : 'line-clamp-3'
-            }`}
+        {/* Song Description */}
+        <div className="mt-4 text-gray-300">
+          <p
+            className={`text-sm md:text-base ${showFullDescription ? '' : 'line-clamp-3'
+              }`}
             dangerouslySetInnerHTML={{
               __html: convertLinks(song.content),
             }}
           />
           {song.content.length > 100 && (
-            <button 
-              onClick={toggleDescription} 
+            <button
+              onClick={toggleDescription}
               className="text-green-500 text-sm mt-2"
             >
               {showFullDescription ? 'Show Less' : 'View More'}
@@ -260,15 +262,15 @@ const SongInfo: React.FC<SongInfoProps> = ({
         </div>
 
 
-      {/* Footer */}
+        {/* Footer */}
         <div className="mt-4 flex justify-between items-center text-sm md:text-base">
           <div className="flex items-center space-x-4 text-gray-300">
-            <button 
+            <button
               onClick={handleLikeClick}
               className="flex items-center space-x-2 hover:text-green-500"
             >
-              <Heart 
-                className={`h-4 w-4 md:h-6 md:w-6 ${isLiked ? 'fill-green-500 text-green-500' : ''}`} 
+              <Heart
+                className={`h-4 w-4 md:h-6 md:w-6 ${isLiked ? 'fill-green-500 text-green-500' : ''}`}
               />
               <span>{song.data?.likes ?? 0}</span>
             </button>
@@ -277,10 +279,10 @@ const SongInfo: React.FC<SongInfoProps> = ({
               <span>{song.data?.views ?? 0}</span>
             </div>
           </div>
-          
-          <SubscribeButton 
-            isSubscribed={isSubscribed} 
-            onSubscribe={onSubscribe} 
+
+          <SubscribeButton
+            isSubscribed={isSubscribed}
+            onSubscribe={onSubscribe}
             className="text-sm md:text-base bg-green-500 text-black px-2 py-1 md:px-4 md:py-2 rounded-full hover:bg-green-400"
           >
             {isSubscribed ? 'Subscribed' : 'Subscribe'}
