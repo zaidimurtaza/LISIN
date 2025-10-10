@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 import { useAuth } from '../../context/AuthContext';
 import { songAPI, profileAPI } from '../../services/api';
@@ -7,12 +6,17 @@ import { Song, Profile } from '../../types';
 import SongInfo from './SongInfo';
 import CommentList from './CommentList';
 import CommentForm from './CommentForm';
+import SEO from '../../components/SEO';
+interface SongDetailProps {
+  id: number
+  onSongEnd: () => void
+}
 
-const SongDetail = ({onSongEnd}) => {
-  const { id } = useParams();
+const SongDetail = ({ id, onSongEnd }: SongDetailProps) => {
+  // const { id } = useParams();
   const { user } = useAuth();
   const [song, setSong] = useState<Song | null>(null);
-  const [isSubscribed, setIsSubscribed] = useState(null);
+  const [isSubscribed, setIsSubscribed] = useState<boolean>(false);
   const [authorProfile, setAuthorProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -37,21 +41,21 @@ const SongDetail = ({onSongEnd}) => {
     try {
       const response = await songAPI.getSong(Number(id));
       setSong(response.data);
-    } catch (error) {
-
+    } catch {
+      // Silently fail
     } finally {
       setLoading(false);
     }
   };
   const fetchSub = async () => {
+    if (!song?.author?.name) return;
     try {
       const response = await songAPI.isSubscribed(song.author.name);
       setIsSubscribed(response.data.is_subscribed);
-    } catch (error) {
-      // toast.error('Failed to load song');
+    } catch {
+      // Silently fail
     } finally {
       setLoading(false);
-     
     }
   };
   
@@ -61,9 +65,8 @@ const SongDetail = ({onSongEnd}) => {
     try {
       const response = await profileAPI.getProfile(song.author.name);
       setAuthorProfile(response.data);
-    } catch (error) {
+    } catch {
       // Only show error toast if we're unable to load critical profile data
-      // console.warn('Failed to load author profile:', error);
       setAuthorProfile({
         id: song.author.id,
         user: song.author.name,
@@ -73,7 +76,6 @@ const SongDetail = ({onSongEnd}) => {
         audio: [],
         subscriber_count: 0,
         subscribers: [],
-
       });
     }
   };
@@ -82,69 +84,58 @@ const SongDetail = ({onSongEnd}) => {
     try {
       await songAPI.likeSong(Number(id));
       await fetchSong();
-    } catch (error) {
+    } catch {
       toast.error('Failed to like song');
     }
   };
 
   const handleViewIncrement = async () => {
-    
     try {
       await songAPI.increaseViewCount(Number(id));
       await fetchSong();
-    } catch (error) {
-      toast.error('Failed to like song');
+    } catch {
+      toast.error('Failed to increment view count');
     }
   };
 
 
-    const handleUnLike = async () => {
-      try {
-        await songAPI.unLikeSong(Number(id));
-        await fetchSong(); // Refresh songs to update like status
-      } catch (error) {
-        toast.error('Failed to unlike song');
-      }
-    };
+  const handleUnLike = async () => {
+    try {
+      await songAPI.unLikeSong(Number(id));
+      await fetchSong();
+    } catch {
+      toast.error('Failed to unlike song');
+    }
+  };
 
-    const handleSave = async () => {
-      if (!song) return;
-      
-      try {
-        await songAPI.saveSong(song.id);
-        toast.success('Song saved successfully');
-        await fetchSong();
-      } catch (error) {
-        toast.error('Failed to save song');
-      }
-    };
+  const handleSave = async () => {
+    if (!song) return;
     
-    const handleUnsave = async () => {
-      if (!song) return;
+    try {
+      await songAPI.saveSong(song.id);
+      toast.success('Song saved successfully');
+      await fetchSong();
+    } catch {
+      toast.error('Failed to save song');
+    }
+  };
     
-      try {
-        await songAPI.unsaveSong(song.id);
-        toast.success('Song removed from saved');
-        await fetchSong();
-      } catch (error) {
-        toast.error('Failed to remove song');
-      }
-    };
+  const handleUnsave = async () => {
+    if (!song) return;
+  
+    try {
+      await songAPI.unsaveSong(song.id);
+      toast.success('Song removed from saved');
+      await fetchSong();
+    } catch {
+      toast.error('Failed to remove song');
+    }
+  };
 
   const handleSubscribe = async () => {
     if (!authorProfile || !user) return;
     
     try {
-
-      if (authorProfile && Array.isArray(authorProfile.subscribers)) {
-        // console.log("user", user.id);
-      } else {
-        console.log("Subscribers list is undefined or not an array");
-      }
-      
-      // console.log(authorProfile.subscribers);
-    
-      fetchSub();
       if (isSubscribed) {
         await profileAPI.unsubscribe(authorProfile.id);
       } else {
@@ -152,11 +143,9 @@ const SongDetail = ({onSongEnd}) => {
       }
       await fetchSub();
       await fetchSong();
-      // await fetchAuthorProfile(); // Refresh the profile after subscription action
       toast.success(isSubscribed ? 'Unsubscribed successfully' : 'Subscribed successfully');
-    } catch (error) {
+    } catch {
       toast.error('Failed to update subscription');
-      console.error(error);
     }
   };
   
@@ -166,7 +155,7 @@ const SongDetail = ({onSongEnd}) => {
       await songAPI.addComment(Number(id), { comment_text: text });
       await fetchSong();
       toast.success('Comment added successfully');
-    } catch (error) {
+    } catch {
       toast.error('Failed to add comment');
     }
   };
@@ -175,15 +164,16 @@ const SongDetail = ({onSongEnd}) => {
     try {
       await songAPI.likeComment(commentId);
       await fetchSong();
-    } catch (error) {
+    } catch {
       toast.error('Failed to like comment');
     }
   };
+
   const handleUnLikeComment = async (commentId: number) => {
     try {
       await songAPI.unLikeComment(commentId);
       await fetchSong();
-    } catch (error) {
+    } catch {
       toast.error('Failed to un-like comment');
     }
   };
@@ -199,16 +189,13 @@ const SongDetail = ({onSongEnd}) => {
   if (!song) return null;
 
   // const isSubscribed = authorProfile?.subscribers.some(sub => sub.id === user?.id) ?? false;
-  const isSaved = authorProfile?.saved_songs?.some(
-    saved => saved.song.id === song.id
-  ) ?? false;
   
   const handleEditComment = async (editingCommentId: number, newCommentText: string) => {
     try {
       await songAPI.editComment(editingCommentId, { comment_text: newCommentText });
-      await fetchSong(); // Refresh the song data to reflect the updated comment
+      await fetchSong();
       toast.success('Comment edited successfully');
-    } catch (error) {
+    } catch {
       toast.error('Failed to edit comment');
     }
   };
@@ -216,8 +203,55 @@ const SongDetail = ({onSongEnd}) => {
 
 
   return (
-    <div className="bg-black min-h-screen text-white">
-      <div className="max-w-7xl mx-auto px-3 py-8 space-y-8">
+    <>
+      <SEO
+        title={`${song.title} by ${song.author.name}`}
+        description={`Listen to ${song.title} by ${song.author.name} on LISIN. ${song.description || 'Enjoy this amazing song and discover more music.'}`}
+        keywords={`${song.title}, ${song.author.name}, music, song, listen online, stream music, LISIN`}
+        url={`https://lisin.vercel.app/song/${song.id}`}
+        image={song.cover_image || undefined}
+        type="music.song"
+        author={song.author.name}
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "MusicRecording",
+          "name": song.title,
+          "description": song.description,
+          "url": `https://lisin.vercel.app/song/${song.id}`,
+          "image": song.cover_image,
+          "duration": song.duration,
+          "byArtist": {
+            "@type": "MusicGroup",
+            "name": song.author.name,
+            "url": `https://lisin.vercel.app/profile/${song.author.name}`
+          },
+          "interactionStatistic": [
+            {
+              "@type": "InteractionCounter",
+              "interactionType": "https://schema.org/LikeAction",
+              "userInteractionCount": song.likes_count
+            },
+            {
+              "@type": "InteractionCounter",
+              "interactionType": "https://schema.org/CommentAction",
+              "userInteractionCount": song.comments?.length || 0
+            },
+            {
+              "@type": "InteractionCounter",
+              "interactionType": "https://schema.org/ListenAction",
+              "userInteractionCount": song.views_count
+            }
+          ],
+          "datePublished": song.created_at,
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": (song.likes_count || 0) > 0 ? "5" : "0",
+            "reviewCount": song.comments?.length || 0
+          }
+        }}
+      />
+      <div className="bg-black min-h-screen text-white">
+        <div className="max-w-7xl mx-auto px-3 py-8 space-y-8">
         <SongInfo 
           song={song} 
           onLike={handleLike}
@@ -227,7 +261,6 @@ const SongDetail = ({onSongEnd}) => {
           onUnsave={handleUnsave}
           onSubscribe={handleSubscribe}
           isSubscribed={isSubscribed}
-          isSaved={isSaved}
           onSongEnd={onSongEnd}
         />
         <div className="bg-gray-900 max-w-4xl mx-auto rounded-lg  p-1">
@@ -243,7 +276,8 @@ const SongDetail = ({onSongEnd}) => {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 

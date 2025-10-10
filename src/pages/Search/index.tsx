@@ -1,10 +1,24 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import SearchPage from './SearchSong';
+import SEO from '../../components/SEO';
 
 const Search = () => {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900">
+    <>
+      <SEO
+        title="Search Music"
+        description="Search and discover your favorite songs on LISIN. Find music by title, artist, genre or keywords and explore our vast music library."
+        keywords="search music, find songs, music search engine, search by artist, search by title, music finder, LISIN search"
+        url="https://lisin.vercel.app/search"
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "SearchResultsPage",
+          "name": "Search Music on LISIN",
+          "description": "Find your favorite songs and discover new music",
+          "url": "https://lisin.vercel.app/search"
+        }}
+      />
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900">
       <div className="w-full max-w-9xl mx-auto sm:px-0 lg:px-0 p-4">
         <div className="bg-gray-850 rounded-2xl shadow-2xl transition-all duration-300 hover:shadow-3xl hover:scale-[1.01] overflow-hidden">
           <div className="px-0 sm:px-6 lg:px-5 pt-6 pb-4">
@@ -33,7 +47,8 @@ const Search = () => {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 
