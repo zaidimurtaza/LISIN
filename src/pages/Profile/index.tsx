@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { useAuth } from '../../context/AuthContext';
@@ -8,6 +8,7 @@ import ProfileHeader from './ProfileHeader';
 import ProfileSongs from './ProfileSongs';
 import SavedSongs from './SavedSongs';
 import EditProfileModal from './EditProfileModal';
+import SEO from '../../components/SEO';
 
 const Profile = () => {
   const { username } = useParams();
@@ -97,7 +98,34 @@ const Profile = () => {
   if (!profile) return null;
 
   return (
-    <div className="bg-black min-h-screen text-white">
+    <>
+      <SEO
+        title={`${profile.username} - Profile`}
+        description={profile.bio || `Check out ${profile.username}'s profile on LISIN. Discover their uploaded songs and musical creations.`}
+        keywords={`${profile.username}, music artist, musician profile, artist songs, music creator, LISIN artist`}
+        url={`https://lisin.vercel.app/profile/${profile.username}`}
+        image={profile.profile_picture || undefined}
+        type="profile"
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "ProfilePage",
+          "mainEntity": {
+            "@type": "Person",
+            "name": profile.username,
+            "description": profile.bio,
+            "image": profile.profile_picture,
+            "url": `https://lisin.vercel.app/profile/${profile.username}`,
+            "interactionStatistic": [
+              {
+                "@type": "InteractionCounter",
+                "interactionType": "https://schema.org/FollowAction",
+                "userInteractionCount": profile.subscribers_count
+              }
+            ]
+          }
+        }}
+      />
+      <div className="bg-black min-h-screen text-white">
       <div className="max-w-7xl mx-auto px-4 py-8">
         <ProfileHeader
           profile={profile}
@@ -164,7 +192,8 @@ const Profile = () => {
           />
         )}
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 

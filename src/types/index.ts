@@ -41,6 +41,11 @@ export interface Song {
   category: string;
   likes: Like[];
   comments?: Comment[];
+  description?: string;
+  cover_image?: string;
+  duration?: string;
+  likes_count?: number;
+  views_count?: number;
 }
 
 export interface SavedSong {

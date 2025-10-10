@@ -1,77 +1,77 @@
 import React, { useEffect, useState } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import SongDetail from '.'
 import { songAPI } from '../../services/api'
-import { motion,  AnimatePresence } from "framer-motion";
-const MainSongView = () => {
-  const [songs, setSongs] = useState([])
-  const { id } = useParams()
+import { motion, AnimatePresence } from 'framer-motion'
+
+interface Song {
+  id: number
+  title: string
+  artist: string
+  // Add other song properties as needed
+}
+
+const MainSongView = ({ id, onClose }: { id: number, onClose: () => void }) => {
+  const [songs, setSongs] = useState<Song[]>([])
+  const [error, setError] = useState<string | null>(null) 
   const navigate = useNavigate()
 
   // Fetch all songs once
   useEffect(() => {
     const fetchSongs = async () => {
-      const allSongs = await songAPI.getAllSongs()
-      console.log("Fetched Songs:", allSongs)
-      setSongs(allSongs.data)
+      try {
+        const allSongs = await songAPI.getAllSongs()
+        setSongs(allSongs.data)
+      } catch (error) {
+        console.error('Error fetching songs:', error)
+        setError('Failed to load songs. Please try again later.') // Error message for the user
+      }
     }
     fetchSongs()
   }, [])
 
-  // Log songs when they are updated
-  useEffect(() => {
-    console.log("Updated Songs state:", songs)
-  }, [songs])
-
   const handleSongEnd = () => {
-    console.log("Song ended. Checking for next.")
-    console.log(songs)
     const currentIndex = songs.findIndex(song => song.id === Number(id))
-    console.log("currentIndex",currentIndex)
-    const nextIndex = currentIndex + 1
+    const nextIndex = (currentIndex + 1) % songs.length // This loops back to the first song
+    const nextSongId = songs[nextIndex]?.id
 
-    if (nextIndex < songs.length) {
-      const nextSongId = songs[nextIndex].id
-      console.log("Navigating to:", nextSongId)
+    if (nextSongId) {
       navigate(`/song/${nextSongId}`)
-    } else {
-        const nextSongId = songs[0].id
-        navigate(`/song/${nextSongId}`)
     }
   }
 
   return (
     <div className="p-0 z-50 relative">
-      
+      {error && <div className="text-red-500 p-2">{error}</div>} {/* Show error message if there's any */}
+
       <AnimatePresence mode="wait">
         <motion.div
-          key={id} // triggers animation on id change
+          key={id}
           initial={{ opacity: 0, x: 100 }}
-          animate={{ 
-            opacity: 1, 
-            x: 0, 
-            transition: { 
-              type: "spring", 
-              stiffness: 300, 
-              damping: 30 
-            }
+          animate={{
+            opacity: 1,
+            x: 0,
+            transition: {
+              type: 'spring',
+              stiffness: 300,
+              damping: 30,
+            },
           }}
-          exit={{ 
-            opacity: 0, 
-            x: -100, 
-            transition: { 
-              duration: 0.6, 
-              ease: "anticipate" 
-            }
+          exit={{
+            opacity: 0,
+            x: -100,
+            transition: {
+              duration: 0.6,
+              ease: 'anticipate',
+            },
           }}
           className="w-full"
         >
-          <SongDetail onSongEnd={handleSongEnd} />
+          <SongDetail id={id} onSongEnd={handleSongEnd} />
         </motion.div>
       </AnimatePresence>
     </div>
-  );
-  
+  )
 }
 
 export default MainSongView

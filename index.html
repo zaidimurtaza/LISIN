@@ -1,23 +1,89 @@
 <!doctype html>
 <html lang="en">
   <head>
-    
     <meta charset="UTF-8" />
-    <link rel="icon" type="image" href="./src/assets/shot.jpg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>LISIN</title>
+    
+    <!-- Primary Meta Tags -->
+    <title>LISIN - Discover, Share and Create Amazing Music</title>
+    <meta name="title" content="LISIN - Discover, Share and Create Amazing Music" />
+    <meta name="description" content="LISIN is a music sharing platform where artists can upload, share, and discover amazing songs. Join our community of music lovers and creators today!" />
+    <meta name="keywords" content="music, songs, streaming, music platform, share music, discover music, upload songs, music community, artists, LISIN" />
+    <meta name="author" content="LISIN" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="language" content="English" />
+    <meta name="revisit-after" content="7 days" />
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image" href="./src/assets/shot.jpg" />
+    <link rel="apple-touch-icon" href="./src/assets/shot.jpg" />
+    <link rel="canonical" href="https://lisin.vercel.app" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://lisin.vercel.app/" />
+    <meta property="og:title" content="LISIN - Discover, Share and Create Amazing Music" />
+    <meta property="og:description" content="LISIN is a music sharing platform where artists can upload, share, and discover amazing songs. Join our community of music lovers and creators today!" />
+    <meta property="og:image" content="https://lisin.vercel.app/src/assets/shot.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content="LISIN" />
+    <meta property="og:locale" content="en_US" />
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://lisin.vercel.app/" />
+    <meta name="twitter:title" content="LISIN - Discover, Share and Create Amazing Music" />
+    <meta name="twitter:description" content="LISIN is a music sharing platform where artists can upload, share, and discover amazing songs. Join our community of music lovers and creators today!" />
+    <meta name="twitter:image" content="https://lisin.vercel.app/src/assets/shot.jpg" />
+    <meta name="twitter:creator" content="@LISIN" />
+    
+    <!-- Additional SEO Tags -->
+    <meta name="theme-color" content="#000000" />
+    <meta name="msapplication-TileColor" content="#000000" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="telephone=no" />
+    
+    <!-- Preconnect for Performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://www.googletagmanager.com" />
+    
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "LISIN",
+      "url": "https://lisin.vercel.app",
+      "description": "Music sharing platform where artists can upload, share, and discover amazing songs",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://lisin.vercel.app/search?q={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "LISIN",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://lisin.vercel.app/src/assets/shot.jpg"
+        }
+      }
+    }
+    </script>
 
     <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-MJ709ZLYS3"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-MJ709ZLYS3');
-</script>
-
-    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MJ709ZLYS3"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-MJ709ZLYS3');
+    </script>
   </head>
   <body>
     <div id="root"></div>
