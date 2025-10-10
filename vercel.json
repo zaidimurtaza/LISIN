@@ -1,8 +1,16 @@
 {
-    "routes": [
+    "rewrites": [
         {
-            "src": "/[^.]+",
-            "dest": "/"
+            "source": "/[^.]+",
+            "destination": "/"
+        },
+        {
+            "source": "/robots.txt",
+            "destination": "/robots.txt"
+        },
+        {
+            "source": "/sitemap.xml",
+            "destination": "/sitemap.xml"
         }
     ],
     "headers": [
@@ -74,16 +82,6 @@
                     "value": "public, max-age=31536000, immutable"
                 }
             ]
-        }
-    ],
-    "rewrites": [
-        {
-            "source": "/robots.txt",
-            "destination": "/robots.txt"
-        },
-        {
-            "source": "/sitemap.xml",
-            "destination": "/sitemap.xml"
         }
     ]
 }
