@@ -1,8 +1,16 @@
 {
-    "routes": [
+    "rewrites": [
         {
-            "src": "/[^.]+",
-            "dest": "/"
+            "source": "/(.*)",
+            "destination": "/"
+        },
+        {
+            "source": "/robots.txt",
+            "destination": "/robots.txt"
+        },
+        {
+            "source": "/sitemap.xml",
+            "destination": "/sitemap.xml"
         }
     ],
     "headers": [
@@ -58,7 +66,7 @@
             ]
         },
         {
-            "source": "/(.*).(?:jpg|jpeg|png|gif|webp|svg|ico)",
+            "source": "/(.*)\\.(jpg|jpeg|png|gif|webp|svg|ico)",
             "headers": [
                 {
                     "key": "Cache-Control",
@@ -67,23 +75,13 @@
             ]
         },
         {
-            "source": "/(.*).(?:js|css)",
+            "source": "/(.*)\\.(js|css)",
             "headers": [
                 {
                     "key": "Cache-Control",
                     "value": "public, max-age=31536000, immutable"
                 }
             ]
-        }
-    ],
-    "rewrites": [
-        {
-            "source": "/robots.txt",
-            "destination": "/robots.txt"
-        },
-        {
-            "source": "/sitemap.xml",
-            "destination": "/sitemap.xml"
         }
     ]
 }
