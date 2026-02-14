@@ -14,8 +14,17 @@ import { formatDistanceToNow } from 'date-fns';
 import SaveButton from '../../components/SaveButton';
 import SubscribeButton from '../../components/SubscribeButton';
 
+declare global {
+  interface Window {
+    ReactNativeWebView?: { postMessage: (msg: string) => void };
+  }
+}
+
+const isNativeApp = typeof window !== 'undefined' && !!window.ReactNativeWebView;
+
 interface SongInfoProps {
   song: Song;
+  playlist?: Song[];
   onUnsave: () => void;
   onLike: () => void;
   onUnLike: () => void;
@@ -28,6 +37,7 @@ interface SongInfoProps {
 
 const SongInfo: React.FC<SongInfoProps> = ({
   song,
+  playlist = [],
   onUnsave,
   onLike,
   onUnLike,
@@ -45,7 +55,52 @@ const SongInfo: React.FC<SongInfoProps> = ({
   const [showFullDescription, setShowFullDescription] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
 
+  const sendToNative = (msg: object) => {
+    if (isNativeApp && window.ReactNativeWebView) {
+      window.ReactNativeWebView.postMessage(JSON.stringify(msg));
+    }
+  };
+
+  const sendPlayToNative = () => {
+    let playlistForNative = playlist
+      .filter((s) => s.audio)
+      .map((s) => ({
+        id: s.id,
+        title: s.title,
+        url: s.audio,
+        author: s.author,
+        image: s.image,
+      }));
+    if (playlistForNative.length === 0 && song.audio) {
+      playlistForNative = [
+        {
+          id: song.id,
+          title: song.title,
+          url: song.audio,
+          author: song.author,
+          image: song.image,
+        },
+      ];
+    }
+    const currentIndex = playlistForNative.findIndex((s) => s.id === song.id);
+    const idx = currentIndex >= 0 ? currentIndex : 0;
+    sendToNative({
+      type: 'PLAY',
+      currentIndex: idx,
+      playlist: playlistForNative,
+    });
+  };
+
   const togglePlay = () => {
+    if (isNativeApp) {
+      if (isPlaying) {
+        sendToNative({ type: 'PAUSE' });
+      } else {
+        sendPlayToNative();
+      }
+      setIsPlaying(!isPlaying);
+      return;
+    }
     if (audioRef.current) {
       if (isPlaying) {
         audioRef.current.pause();
@@ -113,11 +168,16 @@ const SongInfo: React.FC<SongInfoProps> = ({
   };
 
   useEffect(() => {
+    if (isNativeApp) {
+      sendPlayToNative();
+      setIsPlaying(true);
+      return;
+    }
     if (audioRef.current) {
       audioRef.current.play();
       setIsPlaying(true);
     }
-  }, []);
+  }, [song.id, song.audio, playlist]);
 
   const handleViewIncrement = () => {
     setTimeout(() => {
@@ -184,7 +244,10 @@ const SongInfo: React.FC<SongInfoProps> = ({
   </SaveButton>
 
   <button 
-    onClick={() => onSongEnd()}
+    onClick={() => {
+      if (isNativeApp) sendToNative({ type: 'NEXT' });
+      onSongEnd();
+    }}
     className="text-xs md:text-sm bg-indigo-800 hover:bg-indigo-700 text-white px-2 py-1 md:px-2 md:py-1 rounded shadow-md border border-indigo-900 transition-colors duration-200"
   >
     Change Song
@@ -202,7 +265,8 @@ const SongInfo: React.FC<SongInfoProps> = ({
               ref={audioRef}
               src={song.audio}
               onTimeUpdate={handleTimeUpdate}
-              autoPlay
+              autoPlay={!isNativeApp}
+              muted={isNativeApp}
               onEnded={onSongEnd}
             />
 

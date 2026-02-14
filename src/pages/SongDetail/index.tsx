@@ -10,9 +10,10 @@ import SEO from '../../components/SEO';
 interface SongDetailProps {
   id: number
   onSongEnd: () => void
+  playlist?: Song[]
 }
 
-const SongDetail = ({ id, onSongEnd }: SongDetailProps) => {
+const SongDetail = ({ id, onSongEnd, playlist = [] }: SongDetailProps) => {
   // const { id } = useParams();
   const { user } = useAuth();
   const [song, setSong] = useState<Song | null>(null);
@@ -254,6 +255,7 @@ const SongDetail = ({ id, onSongEnd }: SongDetailProps) => {
         <div className="max-w-7xl mx-auto px-3 py-8 space-y-8">
         <SongInfo 
           song={song} 
+          playlist={playlist}
           onLike={handleLike}
           onViewIncrement={handleViewIncrement}                       
           onUnLike={handleUnLike}

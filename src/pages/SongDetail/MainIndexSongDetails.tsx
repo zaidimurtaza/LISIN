@@ -3,13 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import SongDetail from '.'
 import { songAPI } from '../../services/api'
 import { motion, AnimatePresence } from 'framer-motion'
-
-interface Song {
-  id: number
-  title: string
-  artist: string
-  // Add other song properties as needed
-}
+import { Song } from '../../types'
 
 const MainSongView = ({ id, onClose }: { id: number, onClose: () => void }) => {
   const [songs, setSongs] = useState<Song[]>([])
@@ -67,7 +61,7 @@ const MainSongView = ({ id, onClose }: { id: number, onClose: () => void }) => {
           }}
           className="w-full"
         >
-          <SongDetail id={id} onSongEnd={handleSongEnd} />
+          <SongDetail id={id} onSongEnd={handleSongEnd} playlist={songs} />
         </motion.div>
       </AnimatePresence>
     </div>
