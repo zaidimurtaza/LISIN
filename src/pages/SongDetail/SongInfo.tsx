@@ -16,11 +16,12 @@ import SubscribeButton from '../../components/SubscribeButton';
 
 declare global {
   interface Window {
+    isNativeApp?: boolean;
     ReactNativeWebView?: { postMessage: (msg: string) => void };
   }
 }
 
-const isNativeApp = typeof window !== 'undefined' && !!window.ReactNativeWebView;
+const isNativeApp = typeof window !== 'undefined' && window.isNativeApp === true;
 
 interface SongInfoProps {
   song: Song;
@@ -60,6 +61,8 @@ const SongInfo: React.FC<SongInfoProps> = ({
       window.ReactNativeWebView.postMessage(JSON.stringify(msg));
     }
   };
+
+  console.log("DEBUG: isNativeApp", isNativeApp)
 
   const sendPlayToNative = () => {
     let playlistForNative = playlist
